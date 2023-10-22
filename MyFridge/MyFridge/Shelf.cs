@@ -80,19 +80,26 @@ namespace MyFridge
 
             }
         }
-        public Item TookItem(int itemId)
+        public Item? TookItem(int itemId)
         {
-            Item item ;
+            int id = -1;
+            Item? item=null ;
+
             foreach (Item item2 in Items)
             {
                 if (item2.Id == itemId)
                 {
-                    item = item2;
                     SpaceAvailable += item2.Space;
-                    return item;
+                    item = item2;
+                    id=itemId; 
                 }
             }
-            throw new NotImplementedException("No item if such ID number");
+            if(id!=-1)
+            {
+                Items.RemoveAll(item => item.Id == id);
+                return item;
+            }
+            return item;
         }
 
         public void Cleaning()

@@ -76,7 +76,7 @@ namespace MyFridge
 
         public Item TookItem(int itemId)
         {
-            Item empty;
+            Item? empty;
             foreach (var shelf in Shelves)
             {
                 empty = shelf.TookItem(itemId);
@@ -85,7 +85,6 @@ namespace MyFridge
             }
              throw new Exception("No item if such ID number");
            
-            
         }
 
         public void Cleaning()
