@@ -103,7 +103,7 @@
         }
         static void Main(string[] args)
         {
-            List<Item> items = new List<Item>();
+                List<Item> items = new List<Item>();
             items.Add(new Item("milk", KindItem.Drink, Kosher.Dairy, DateTime.Now, 11));
             items.Add(new Item("pizza", KindItem.Food, Kosher.Dairy, DateTime.Now.AddDays(11), 11));
             items.Add(new Item("woter", KindItem.Drink, Kosher.Fur, DateTime.Now.AddDays(80), 4));
@@ -114,19 +114,18 @@
             shelf.Add(new Shelf(4, items));
             Refrigerator refrigerator = new("amkor", "blake", shelf);
             List<Item> items2 = new List<Item>();
-            items.Add(new Item("milk", KindItem.Drink, Kosher.Dairy, DateTime.Now, 78));
-            items.Add(new Item("pizza", KindItem.Food, Kosher.Dairy, DateTime.Now.AddDays(11), 11));
-            items.Add(new Item("woter", KindItem.Drink, Kosher.Fur, DateTime.Now.AddDays(80), 4));
+            items2.Add(new Item("milk", KindItem.Drink, Kosher.Dairy, DateTime.Now, 78));
+            items2.Add(new Item("pizza", KindItem.Food, Kosher.Dairy, DateTime.Now.AddDays(11), 11));
+            items2.Add(new Item("woter", KindItem.Drink, Kosher.Fur, DateTime.Now.AddDays(80), 4));
             List<Shelf> shelf2 = new List<Shelf>();
-            shelf.Add(new Shelf(1, items2));
-            shelf.Add(new Shelf(2, items));
-            shelf.Add(new Shelf(3, items));
-            shelf.Add(new Shelf(4, items2));
+            shelf2.Add(new Shelf(1, items2));
+            shelf2.Add(new Shelf(2, items));
+            shelf2.Add(new Shelf(3, items));
+            shelf2.Add(new Shelf(4, items2));
             Refrigerator refrigerator2 = new("sumsong", "silver", shelf2);
             List<Refrigerator> refrigerators = new();
             refrigerators.Add(refrigerator2);
             refrigerators.Add(refrigerator);
-
 
             Console.WriteLine("Press 1: the program will print all the items on the refrigerator and all its contents.\r\nClick 2: the program will print how much space is left in the fridge\r\nPress 3: The program will allow the user to put an item in the fridge.\r\nPress 4: The program will allow the user to remove an item from the refrigerator.\r\nPress 5: the program will clean the refrigerator and print all the checked items to the user.\r\nPress 6: the program will ask the user &quot;What do I want to eat?&quot; and bring the function to bring a product.\r\nClick 7: the program will print all the products sorted by their expiration date.\r\nPress 8: the program will print all the shelves arranged according to the free space left on them.\r\nPress 9: the program will print all the refrigerators arranged according to the free space left in them.\r\nClick 10: The program will prepare the refrigerator for shopping\r\nPress 100: system shutdown.");
             string input = "0";
