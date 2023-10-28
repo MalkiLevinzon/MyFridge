@@ -2,6 +2,6 @@
 {
     public enum Kosher
     {
-        Meaty = 0, Dairy = 1, Fur = 2
+        Meaty = 0, Dairy = 1, Parve = 2
     }
 }

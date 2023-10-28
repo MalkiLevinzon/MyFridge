@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,7 +9,6 @@ namespace MyFridge
 {
     internal class Refrigerator
     {
-        private Shelf shelf;
 
         public static int UniqueId { get; set; } = 1;
         public int Id { get; } = 134;
@@ -21,7 +21,7 @@ namespace MyFridge
 
         public Refrigerator(string model, string color, List<Shelf> shelves)
         {
-            Id += UniqueId++;
+            Id = UniqueId++;
             Model = model;
             Color = color;
             if (shelves == null) throw new Exception("shelves null");
@@ -37,14 +37,14 @@ namespace MyFridge
 
         public override string ToString()
         {
-            string s="";
-            foreach (var item in Shelves)
+            string stringSelf="";
+            foreach (var shelf in Shelves)
             {
-                s += item.ToString();
+                stringSelf = stringSelf.Insert(stringSelf.Length, shelf.ToString() + "\n");
             }
-            return
-            ("id:" + Id + " model: " + Model + " color: " + Color + " amount of shelves: " + AmountOfShelves +
-             " shelves: " + s);
+            return(
+            "id:" + Id + " model: " + Model + " color: " + Color + " amount of shelves: " + AmountOfShelves +
+             " shelves: " + stringSelf);
         }
 
         public int GetFreeSpace() { 
@@ -62,14 +62,15 @@ namespace MyFridge
             if (GetFreeSpace()<item.Space) throw new Exception("There is not enough space");
             foreach (var shelf in Shelves)
             {
-                if (shelf.SpaceAvailable>=item.Space)
+                if (shelf.SpaceAvailable >= item.Space)
                 {
                     shelf.InsertingItem(item);
                     return;
                 }
+            }
                 throw new Exception("There is not enough space");
 
-            }
+            
   
         }
 
@@ -79,8 +80,12 @@ namespace MyFridge
             Item? empty;
             foreach (var shelf in Shelves)
             {
-                empty = shelf.TookItem(itemId);
-                if (empty != null) return empty;    
+                
+                
+                    empty = shelf.TookItem(itemId);
+                    if (empty != null) return empty;
+                
+                                   
 
             }
              throw new Exception("No item if such ID number");
@@ -91,7 +96,7 @@ namespace MyFridge
         {
             foreach (Shelf shelf in Shelves)
             {
-                shelf.Cleaning();
+                shelf.CleanExpiredItems();
             }
         }
 
@@ -128,7 +133,7 @@ namespace MyFridge
             return shelves;
 
         }
-        public List<Item> DairProducts(ref int freeSpace)
+        public List<Item> DairyProducts3(ref int freeSpace)
         {
         List <Item> items = new();
             foreach (var shelf in Shelves)
@@ -145,21 +150,23 @@ namespace MyFridge
             return items;
         }
         public void GoingShopping()
+           
         {
-            if (this.GetFreeSpace() >= 29)
+            const int FreeSpace = 29;
+            if (this.GetFreeSpace() >= FreeSpace)
             {
                 Console.WriteLine("go to shopping");
                 return;
             }
             this.Cleaning();
-            if (this.GetFreeSpace() >= 29)
+            if (this.GetFreeSpace() >= FreeSpace)
             {
                 Console.WriteLine("go to shopping");
                 return;
             }
             var freeSpace=this.GetFreeSpace();
             List<Item> items = new();
-            items.AddRange(this.DairProducts(ref freeSpace));
+            items.AddRange(this.DairyProducts3(ref freeSpace));
             if (freeSpace>=29)
             {
                 foreach(var item in items)
@@ -220,7 +227,7 @@ namespace MyFridge
             {
                 foreach (var item in shelf.Items)
                 {
-                    if (item.Kosher == Kosher.Fur && item.ExpiryDate.AddDays(-1) <= DateTime.Today)
+                    if (item.Kosher == Kosher.Parve && item.ExpiryDate.AddDays(-1) <= DateTime.Today)
                     {
                         freeSpace += item.Space;
                         items.Add(item);

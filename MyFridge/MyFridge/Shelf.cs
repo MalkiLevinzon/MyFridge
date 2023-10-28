@@ -5,6 +5,14 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+public sealed class StringBuilder : System.Runtime.Serialization.ISerializable
+
+{
+    public void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        throw new NotImplementedException();
+    }
+}
 
 namespace MyFridge
 {
@@ -32,27 +40,23 @@ namespace MyFridge
 
         public Shelf(int floorNumber, List<Item> items)
         {
-            
-            Id += UniqueId++;
+            Id = UniqueId++;
 
             FloorNumber = floorNumber;
-                //if (items != null)
-                //{
-                //    foreach (var item in items)
-                //    {
-                //        if (item == null) items.Remove(item);
-                //    }
-                foreach (var item in items)
+            int sum = 0;
+
+            foreach (var item in items)
                 {
-                    if (_spaceAvailable - item.Space >= 0)
-                        _spaceAvailable -= item.Space;
-                    else
-                        items.Remove(item);
+                sum += item.Space;
+               
                 }
-            if (items.Count > 0)
+            if (sum < _spaceAvailable)
+            {
+                _spaceAvailable -= sum;
                 Items = items;
+            }
             else
-                throw new Exception("The items are not initialized");
+                throw new Exception("Shelf could not be initialized. Shelf size: " + _spaceAvailable + " total items size " + sum);
 
         }
 
@@ -60,13 +64,17 @@ namespace MyFridge
 
         public override string ToString()
         {
-            string s = "";
+            string stringItems="";
+
             foreach (var item in Items)
             {
-                s += item.ToString();
+              stringItems=  stringItems.Insert(stringItems.Length,  item.ToString()+"\n");
             }
-            return"Id: "+Id+" floor Number: "+FloorNumber+" items "+s;
            
+
+         
+            return "Id: " + Id + " floor Number: " + FloorNumber + " items " + stringItems ;
+
 
         } 
 
@@ -83,26 +91,26 @@ namespace MyFridge
         public Item? TookItem(int itemId)
         {
             int id = -1;
-            Item? item=null ;
+            Item? returnItem = null ;
 
-            foreach (Item item2 in Items)
+            foreach (Item item in Items)
             {
-                if (item2.Id == itemId)
+                if (item.Id == itemId)
                 {
-                    SpaceAvailable += item2.Space;
-                    item = item2;
+                    SpaceAvailable += item.Space;
+                    returnItem = item;
                     id=itemId; 
                 }
             }
             if(id!=-1)
             {
                 Items.RemoveAll(item => item.Id == id);
-                return item;
+                return returnItem;
             }
-            return item;
+            return returnItem;
         }
 
-        public void Cleaning()
+        public void CleanExpiredItems()
         {
             foreach (Item item in Items)
             {
